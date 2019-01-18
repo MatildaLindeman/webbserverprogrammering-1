@@ -34,4 +34,29 @@ $temporary = array(
     )
 );
 
+// Läs av GET-Parametern
+$slug = filter_input(INPUT_GET, 'slug', FILTER_SANITIZE_URL);
 
+// Provisorisk angivelse av teckenkodningen under tiden vi testar
+header("Content-type: text/html; charset=utf-8");
+
+$h1span = "Blogg";
+
+if (empty($slug) ) {
+	// Ingen enskild sida är vald
+	
+	$template = 'list-blog-posts';
+	
+
+} elseif ( array_key_exists($slug, $temporary) ) {
+	// Ett befintligt inlägg har valts, visa det
+	//Preliminär test-kod visar bara inläggets titel 
+	$blogpost = $temporary[$slug];
+	$template = 'single-blog-post';
+} else {
+	// Ett ogiltigt val har gjorts
+	header("HTTP/1.0 404 Not Found");
+	$template = 'not-found';
+}
+
+require "../templates/{$template}.php";
